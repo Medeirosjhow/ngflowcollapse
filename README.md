@@ -4,16 +4,16 @@ NgFlowCollapse é uma prova de conceito que integra a biblioteca [React Flow Com
 
 ## Índice
 
-* [Visão Geral](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Recursos](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Tecnologias](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Pré-requisitos](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Instalação](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Uso](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Estrutura do Projeto](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Contribuição](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Licença](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
-* [Contato](https://www.notion.so/NgFlowCollapse-1301c13b91ab80a0ba57e8e5aca18a56?pvs=21)
+* [Visão Geral](#visão-geral)
+* [Recursos](#recursos)
+* [Tecnologias](#tecnologias)
+* [Pré-requisitos](#pré-requisitos)
+* [Instalação](#instalação)
+* [Uso](#uso)
+* [Estrutura do Projeto](#estrutura-do-projeto)
+* [Contribuição](#contribuição)
+* [Licença](#licença)
+* [Contato](#contato)
 
 ## Visão Geral
 
