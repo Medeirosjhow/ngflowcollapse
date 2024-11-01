@@ -1,6 +1,7 @@
 {
   "name": "ngflowcollapse",
   "version": "0.0.0",
+  "homepage": "https://Medeirosjhow.github.io/ngflowcollapse",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
