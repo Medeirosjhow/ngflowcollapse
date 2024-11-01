@@ -1,8 +1,8 @@
 // src/app/components/react-flow/CollapsibleNode.tsx
 
-import React, { useContext } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
-import { ToggleCollapseContext, LayoutDirectionContext } from './Contexts';
+import React, { useContext } from "react";
+import { Handle, Position, NodeProps } from "reactflow";
+import { ToggleCollapseContext, LayoutDirectionContext } from "./Contexts";
 
 interface CollapsibleNodeProps extends NodeProps {}
 
@@ -18,34 +18,38 @@ const CollapsibleNode: React.FC<CollapsibleNodeProps> = ({ id, data }) => {
   };
 
   // Define a posição dos handles com base na direção do layout
-  const sourceHandlePosition = layoutDirection === 'LR' ? Position.Right : Position.Bottom;
-  const targetHandlePosition = layoutDirection === 'LR' ? Position.Left : Position.Top;
+  const sourceHandlePosition =
+    layoutDirection === "LR" ? Position.Right : Position.Bottom;
+  const targetHandlePosition =
+    layoutDirection === "LR" ? Position.Left : Position.Top;
 
   return (
     <div className="collapsible-node">
-      <div
-        className="header"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '5px',
-          background: '#ddd',
-          borderRadius: '5px',
-        }}
-      >
-        <span>{data.label}</span>
-        <button onClick={handleToggle} style={{ cursor: 'pointer' }}>
-          {collapsed ? 'Expandir' : 'Colapsar'}
+      <div className="collapsible-node__header">
+        <span className="collapsible-node__label">{data.label}</span>
+        <button
+          onClick={handleToggle}
+          className="collapsible-node__toggle-btn"
+          aria-expanded={!collapsed}
+          aria-label="Toggle collapse"
+        >
+          {collapsed ? "▼" : "▲"}
         </button>
       </div>
-      {!collapsed && (
-        <div className="details" style={{ padding: '5px' }}>
-          {data.details}
-        </div>
-      )}
-      <Handle type="target" position={targetHandlePosition} id="a" />
-      <Handle type="source" position={sourceHandlePosition} id="b" />
+      <Handle
+        type="target"
+        position={targetHandlePosition}
+        id="handle-target"
+        className="collapsible-node__handle--target"
+      />
+      <Handle
+        type="source"
+        position={sourceHandlePosition}
+        id="handle-source"
+        className="collapsible-node__handle--source"
+      />
+
+      <button className="collapsible-node__add-btn">+ add child node</button>
     </div>
   );
 };

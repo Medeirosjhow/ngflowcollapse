@@ -1,56 +1,78 @@
-@import '~reactflow/dist/style.css';
-/* You can add global styles to this file, and also import other style files */
-/* Estilo base para o nó colapsável */
+@import "~reactflow/dist/style.css";
+
+/* Base style for the collapsible node */
 .collapsible-node {
-  padding: 10px; /* Espaçamento interno */
-  border: 1px solid #ddd; /* Borda suave */
-  border-radius: 5px; /* Bordas arredondadas */
-  background-color: #fff; /* Fundo branco */
-  min-width: 150px; /* Largura mínima */
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidade */
-  position: relative; /* Para posicionar os Handles */
+  width: 180px;
+  background-color: #fff;
+  box-shadow:
+    0 4px 6px -1px #0000001a,
+    0 2px 4px -2px #0000001a;
+  border-radius: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  position: relative;
 }
 
-/* Estilo para o header do nó */
-.collapsible-node .header {
-  display: flex; /* Layout flexível */
-  justify-content: space-between; /* Espaço entre o rótulo e o botão */
-  align-items: center; /* Alinha verticalmente os itens */
+/* Header style for the collapsible node */
+.collapsible-node__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Estilo para o conteúdo adicional */
-.collapsible-node .content {
-  margin-top: 5px; /* Espaço acima do conteúdo */
-  font-size: 0.9em; /* Tamanho da fonte menor */
-  color: #555; /* Cor de texto cinza */
+/* Label style within the header */
+.collapsible-node__label {
+  font-size: 1em;
+  color: #333;
 }
 
-/* Estilo para o botão de colapsar/expandir */
-.collapsible-node .collapse-button {
-  background: none; /* Fundo transparente */
-  border: none; /* Sem borda */
-  color: #007bff; /* Texto azul */
-  cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
-  font-size: 0.8em; /* Fonte menor */
+/* Style for the collapse/expand button */
+.collapsible-node__toggle-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.8em;
+  transition: color 0.3s ease;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-/* Efeito de hover para o botão */
-.collapsible-node .collapse-button:hover {
-  text-decoration: underline; /* Sublinhado ao passar o mouse */
+/* Style for the add child node button */
+.collapsible-node__add-btn {
+  font-size: 9px;
+  font-family: monospace;
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  text-align: center;
+  color: #94a3b8;
+  background-color: #f1f5f980;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  border-radius: 4px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #007bff;
+  }
 }
 
-/* Estilo para o handle esquerdo */
-.collapsible-node .handle-left {
-  background: #555; /* Cor do handle */
+/* Target and Source Handle styles */
+.collapsible-node__handle--target,
+.collapsible-node__handle--source {
+  background: #555;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
 }
 
-/* Estilo para o handle direito */
-.collapsible-node .handle-right {
-  background: #555; /* Cor do handle */
-}
-
-/* Estilo quando o nó está colapsado */
+/* Optional style for collapsed state */
 .collapsible-node.collapsed {
-  /* Poderia adicionar estilos específicos para o estado colapsado, se necessário */
+  /* Add specific styles for collapsed state if needed */
 }
-
