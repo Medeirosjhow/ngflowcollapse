@@ -19,7 +19,7 @@ import ReactFlow, {
 } from 'reactflow';
 import dagre from 'dagre';
 import CollapsibleNode from './CollapsibleNode';
-import { ToggleCollapseContext, LayoutDirectionContext } from './contexts';
+import { ToggleCollapseContext, LayoutDirectionContext } from './Contexts';
 
 interface ReactFlowComponentProps {
   nodes: Node[];

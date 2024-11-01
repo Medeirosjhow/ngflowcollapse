@@ -2,7 +2,7 @@
 
 import React, { useContext } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { ToggleCollapseContext, LayoutDirectionContext } from './contexts';
+import { ToggleCollapseContext, LayoutDirectionContext } from './Contexts';
 
 interface CollapsibleNodeProps extends NodeProps {}
 
