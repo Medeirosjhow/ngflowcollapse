@@ -1,199 +1,104 @@
 # NgFlowCollapse
 
-NgFlowCollapse é uma prova de conceito que integra a biblioteca [React Flow Community](https://reactflow.dev/) dentro de uma aplicação Angular 16, adicionando funcionalidade de colapso aos nós do diagrama. Este projeto expande os exemplos fornecidos no repositório [angular-reactflow-examples](https://github.com/relliv/angular-reactflow-examples), demonstrando como encapsular componentes React em Angular e implementar interações avançadas de maneira eficiente e escalável.
+NgFlowCollapse é uma prova de conceito (PoC) desenvolvida para integrar a biblioteca **React Flow Community** dentro de uma aplicação  **Angular 16** , demonstrando uma arquitetura híbrida que utiliza o melhor dos dois frameworks. Este projeto vai além dos exemplos existentes, adicionando funcionalidades avançadas de interação, como **colapso e expansão de nós** de diagrama.
 
 ## Índice
 
-* [Visão Geral](#visão-geral)
-* [Recursos](#recursos)
-* [Tecnologias](#tecnologias)
-* [Pré-requisitos](#pré-requisitos)
-* [Instalação](#instalação)
-* [Uso](#uso)
-* [Estrutura do Projeto](#estrutura-do-projeto)
-* [Contribuição](#contribuição)
-* [Licença](#licença)
-* [Contato](#contato)
+* [Objetivo](#-objetivo)
+* [Decisões de Design](#-decis%C3%B5es-de-design)
+  * [Integração Angular + React: Escolha pelo Wrapper](#1-integra%C3%A7%C3%A3o-angular--react-escolha-pelo-wrapper)
+  * [Componentização e Modularidade](#2-componentiza%C3%A7%C3%A3o-e-modularidade)
+  * [Layout Automatizado com Dagre](#3-layout-automatizado-com-dagre)
+* [Recursos](#-recursos)
+* [Tecnologias](#-tecnologias)
+* [Pré-requisitos](#-pr%C3%A9-requisitos)
+* [Instalação](#-instala%C3%A7%C3%A3o)
+* [Estrutura do Projeto](#-estrutura-do-projeto)
+* [Contribuição](#-contribui%C3%A7%C3%A3o)
+* [Licença](#-licen%C3%A7a)
 
-## Visão Geral
+## 🚀 Objetivo
 
-NgFlowCollapse permite aos usuários criar e interagir com diagramas de fluxo complexos, oferecendo a capacidade de colapsar e expandir nós para melhorar a legibilidade e organização visual. Utilizando Angular 16 como framework principal e React Flow Community para a manipulação dos diagramas, esta aplicação demonstra como combinar o melhor dos dois mundos para criar interfaces ricas e interativas.
+Criar uma interface de diagrama de fluxo interativo onde os usuários possam organizar visualmente informações complexas. A possibilidade de colapsar e expandir nós é essencial para manter a visualização clara e organizada, especialmente em diagramas grandes.
 
-## Recursos
+## 📋 Decisões de Design
 
-* **Colapsar/Expandir Nós** : Controle a visibilidade de informações detalhadas em cada nó.
-* **Arrastar e Soltar** : Reorganize os nós facilmente através de uma interface intuitiva.
-* **Adicionar e Remover Nós** : Personalize o diagrama conforme suas necessidades.
-* **Salvamento de Estado** : Salve e recupere o estado atual do diagrama.
-* **Responsividade** : Interface adaptável para diferentes tamanhos de tela.
+### 1. [Integração Angular + React: Escolha pelo Wrapper](#integra%C3%A7%C3%A3o-angular--react-escolha-pelo-wrapper)
 
-## Tecnologias
+A integração de React em um projeto Angular pode ser feita de diferentes maneiras. Algumas das abordagens mais comuns incluem:
 
-* **Angular 16** : Framework robusto para construção de aplicações web.
-* **React Flow Community** : Biblioteca para criação de diagramas interativos.
-* **TypeScript** : Linguagem que adiciona tipagem estática ao JavaScript.
-* **Webpack** : Empacotador de módulos para JavaScript.
-* **SCSS** : Pré-processador CSS para estilos avançados.
+* **Wrapper Component** : Cria-se um componente Angular que encapsula o componente React, permitindo comunicação através de *props* e eventos. Essa abordagem envolve um *wrapper* de código relativamente simples e permite integrar qualquer componente React, mantendo o fluxo de dados controlado e as dependências bem organizadas.
+* **Web Components** : Outra possibilidade é transformar o componente React em um **Web Component** (com `ReactDOM.createRoot`) e usá-lo diretamente no Angular. Essa abordagem é útil para casos onde o componente React precisa ser reutilizado fora do Angular, mas requer configuração adicional para cada evento e estado, além de não ser tão eficiente quanto o *wrapper* para comunicação direta.
+* **Micro Frontends** : Em cenários mais complexos, onde múltiplas bibliotecas precisam ser combinadas, pode-se adotar uma arquitetura de **Micro Frontends** (com [Webpack Module Federation](), por exemplo), permitindo que partes do projeto rodem independentemente, cada uma em sua própria biblioteca. Isso, no entanto, adiciona complexidade e é mais indicado para grandes sistemas.
 
-## Pré-requisitos
+Para o  **NgFlowCollapse** , escolhemos a abordagem de **Wrapper Component** por sua simplicidade, controle e fácil manutenção. Essa técnica nos permitiu encapsular o `ReactFlow` com um *wrapper* Angular (`react-wrapper.component.ts`), garantindo que o diagrama fosse carregado e gerenciado corretamente, sem a sobrecarga de configurar eventos entre bibliotecas de maneira complexa. O *wrapper* simplifica a passagem de dados e a comunicação com o Angular, tornando a integração mais leve e eficiente.
 
-Antes de começar, certifique-se de ter os seguintes instalados:
+### 2. [Componentização e Modularidade](#componentiza%C3%A7%C3%A3o-e-modularidade)
 
-* **Node.js** : Versão 14 ou superior. [Download](https://nodejs.org/)
-* **npm** : Gerenciador de pacotes Node.js (geralmente incluído com o Node.js).
-* **Angular CLI** : Instale globalmente usando:
+Cada componente possui uma responsabilidade clara. O `CollapsibleNode` foi desenhado especificamente para permitir colapso/expansão e facilitar a manutenção do estado de exibição dos nós filhos. Isso torna a estrutura do código escalável e de fácil manutenção.
+
+### 3. [Layout Automatizado com Dagre](#layout-automatizado-com-dagre)
+
+Optamos pelo uso do **Dagre** para organizar os nós automaticamente, facilitando a visualização do diagrama e reduzindo o esforço manual de organização por parte do usuário. O layout é calculado de forma que o diagrama permaneça limpo e organizado, mesmo com muitos nós.
+
+## 🔑 Recursos
+
+* **Colapso e Expansão de Nós** : Melhor organização visual ao esconder detalhes desnecessários.
+* **Arraste e Solte** : Interface intuitiva para reorganizar o layout.
+* **Suporte a Múltiplas Conexões** : Permite definir relações complexas entre nós.
+* **Layout Automatizado** : Uso de algoritmos para disposição automática de nós.
+* **MiniMapa e Controles** : Ferramentas para visualização e navegação simplificadas.
+
+## 🛠 Tecnologias
+
+* **Angular 16** : Para estrutura e organização da aplicação.
+* **React Flow Community** : Para gerenciamento visual de diagramas.
+* **Dagre** : Algoritmo para organização automática do layout.
+* **TypeScript** : Para uma base de código mais robusta e tipada.
+* **SCSS** : Estilização avançada para uma interface mais atraente.
+
+## ⚙️ Pré-requisitos
+
+* **Node.js** >= 14
+* **Angular CLI**
 
 ```bash
-  bash
-  Copiar código
-  npm install -g @angular/cli
-
+npm install -g @angular/cli
 ```
 
-## Instalação
 
-Siga os passos abaixo para configurar o projeto localmente:
+## 🚀 Instalação
 
-1. **Clone o repositório:**
+1. Clone o repositório:
+
    ```bash
-   bash
-   Copiar código
-   git clone <https://github.com/seu-usuario/ngflowcollapse.git>
+   git clone https://github.com/Medeirosjhow/ngflowcollapse.git
    cd ngflowcollapse
-
    ```
-2. **Instale as dependências:**
+2. Instale as dependências:
+
    ```bash
-   bash
-   Copiar código
    npm install
-
    ```
-3. **Inicie a aplicação:**
+3. Inicie a aplicação:
+
    ```bash
-   bash
-   Copiar código
-   ng serve
-
+   npm start
    ```
-4. **Acesse a aplicação:**
-   Abra o navegador e vá para `http://localhost:4200/`.
+4. Acesse em `http://localhost:4200/`.
 
-## Uso
+## 📂 Estrutura do Projeto
 
-Após iniciar a aplicação, você verá um diagrama de fluxo básico. Cada nó possui um botão de colapso que permite ocultar ou revelar detalhes adicionais. Para personalizar o diagrama:
+* `src/app/components/react-flow`: Contém os componentes React encapsulados.
+  * `CollapsibleNode.tsx`: Lógica e interface de nós com colapso/expansão.
+  * `ReactFlowComponent.tsx`: Integração principal com o React Flow.
+* `src/app/flow-diagram`: Estrutura do diagrama Angular, onde React Flow é encapsulado.
+  * `react-wrapper.component.ts`: Wrapper Angular para renderizar componentes React.
 
-* **Adicionar Nós** : Utilize o painel de controle para adicionar novos nós.
-* **Modificar Estrutura** : Arraste os nós para reorganizar a disposição.
-* **Colapsar/Expandir** : Clique no ícone de colapso em qualquer nó para alternar a visibilidade dos detalhes.
+## 🤝 Contribuição
 
-### Exemplo de Código
+Feedbacks e contribuições são bem-vindos! Sinta-se à vontade para abrir uma *issue* ou enviar um  *pull request* .
 
-Para implementar a funcionalidade de colapso, você pode modificar o componente do nó da seguinte forma:
+## 📄 Licença
 
-```tsx
-typescript
-Copiar código
-// src/app/components/flow-node/flow-node.component.ts
-import { Component, Input } from '@angular/core';
-import { Handle, Position } from 'react-flow-renderer';
-
-@Component({
-  selector: 'app-flow-node',
-  template: `
-    <div class="node">
-      <div class="header">
-        <span>{{ data.label }}</span>
-        <button (click)="toggleCollapse()">
-          {{ isCollapsed ? 'Expandir' : 'Colapsar' }}
-        </button>
-      </div>
-      <div class="content" *ngIf="!isCollapsed">
-        {{ data.details }}
-      </div>
-      <Handle type="source" position="right" />
-      <Handle type="target" position="left" />
-    </div>
-  `,
-  styles: [`
-    .node { /* Estilos do nó */ }
-    .header { /* Estilos do cabeçalho */ }
-    .content { /* Estilos do conteúdo */ }
-  `]
-})
-export class FlowNodeComponent {
-  @Input() data: any;
-  isCollapsed = false;
-
-  toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
-  }
-}
-
-```
-
-## Estrutura do Projeto
-
-```typescript
-ngflowcollapse/
-├── e2e/                     # Testes end-to-end
-├── node_modules/            # Dependências do projeto
-├── src/
-│   ├── app/
-│   │   ├── components/      # Componentes Angular encapsulando React Flow
-│   │   │   ├── flow-node/   # Componente de nó com funcionalidade de colapso
-│   │   │   └── ...          # Outros componentes
-│   │   ├── services/        # Serviços Angular
-│   │   ├── app.module.ts    # Módulo principal da aplicação
-│   │   └── app.component.ts # Componente raiz
-│   ├── assets/              # Recursos estáticos (imagens, estilos)
-│   ├── environments/        # Configurações de ambiente
-│   └── index.html           # Página principal
-├── angular.json             # Configurações do Angular
-├── package.json             # Dependências e scripts do projeto
-├── README.md                # Documentação deste arquivo
-└── LICENSE                  # Arquivo de licença
-
-```
-
-## Contribuição
-
-Contribuições são extremamente bem-vindas! Siga as etapas abaixo para contribuir com o NgFlowCollapse:
-
-1. **Fork este repositório.**
-2. **Crie uma branch para a sua feature ou correção:**
-   ```bash
-   bash
-   Copiar código
-   git checkout -b minha-nova-feature
-
-   ```
-3. **Comite as suas alterações:**
-   ```bash
-   bash
-   Copiar código
-   git commit -m "Descrição das alterações"
-
-   ```
-4. **Faça o push para a branch:**
-   ```bash
-   bash
-   Copiar código
-   git push origin minha-nova-feature
-
-   ```
-5. **Abra um Pull Request.**
-
-### Padrões de Código
-
-* Siga as diretrizes de estilo do Angular.
-* Escreva testes para novas funcionalidades.
-* Documente o código onde necessário.
-
-## Licença
-
-Este projeto está licenciado sob a MIT License.
-
-## Contato
-
-Desenvolvido por [Jhonatas Medeiros de Melo](https://github.com/Medeirosjhow).
+Este projeto é de uso livre para estudos e desenvolvimento pessoal.
