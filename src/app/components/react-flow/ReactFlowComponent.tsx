@@ -1,5 +1,3 @@
-// src/app/components/react-flow/ReactFlowComponent.tsx
-
 import * as React from 'react';
 import ReactFlow, {
   ReactFlowProvider,
@@ -32,17 +30,16 @@ interface ReactFlowComponentProps {
   snapGrid: [number, number];
 }
 
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
 const nodeWidth = 172;
 const nodeHeight = 36;
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
+const getLayoutedElements = (nodes: Node[], edges: Edge[], direction: 'LR' | 'TB') => {
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
-    rankdir: 'LR',
+    rankdir: direction,
     nodesep: 50,
-    ranksep: 50,
+    ranksep: 100,
   });
 
   nodes.forEach((node) => {
@@ -57,12 +54,14 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
 
   const layoutedNodes = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
-    node.targetPosition = Position.Left;
-    node.sourcePosition = Position.Right;
+    node.targetPosition = direction === 'LR' ? Position.Left : Position.Top;
+    node.sourcePosition = direction === 'LR' ? Position.Right : Position.Bottom;
+
     node.position = {
       x: nodeWithPosition.x - nodeWidth / 2,
       y: nodeWithPosition.y - nodeHeight / 2,
     };
+
     return node;
   });
 
@@ -80,58 +79,17 @@ const ReactFlowComponent: React.FC<ReactFlowComponentProps> = ({
   snapToGrid,
   snapGrid,
 }) => {
-  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges);
+  const [layoutDirection, setLayoutDirection] = React.useState<'LR' | 'TB'>('LR');
+  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, layoutDirection);
 
   const [rfNodes, setRfNodes, onNodesChangeInternal] = useNodesState(layoutedNodes);
   const [rfEdges, setRfEdges, onEdgesChangeInternal] = useEdgesState(layoutedEdges);
-  const [collapsedNodes, setCollapsedNodes] = React.useState<Set<string>>(new Set());
 
-  /**
-   * Função para obter todos os descendentes de um nó de forma recursiva.
-   */
-  const getDescendants = (nodeId: string, nodesList: Node[]): string[] => {
-    const children = nodesList.filter((node) => node.data?.parentId === nodeId).map((node) => node.id);
-    let descendants = [...children];
-    children.forEach((childId) => {
-      descendants = [...descendants, ...getDescendants(childId, nodesList)];
-    });
-    return descendants;
-  };
-
-  /**
-   * Função para alternar o estado de colapso de um nó e seus descendentes.
-   */
-  const toggleCollapse = (nodeId: string) => {
-    const newCollapsedNodes = new Set(collapsedNodes);
-    if (newCollapsedNodes.has(nodeId)) {
-      newCollapsedNodes.delete(nodeId); // Expandir
-    } else {
-      newCollapsedNodes.add(nodeId); // Colapsar
-    }
-    setCollapsedNodes(newCollapsedNodes);
-
-    // Obter todos os descendentes do nó
-    const descendantIds = getDescendants(nodeId, rfNodes);
-
-    // Atualizar visibilidade dos nós descendentes
-    setRfNodes((nds) =>
-      nds.map((node) => {
-        if (descendantIds.includes(node.id)) {
-          return { ...node, hidden: newCollapsedNodes.has(nodeId) };
-        }
-        return node;
-      })
-    );
-
-    // Atualizar visibilidade das arestas associadas aos descendentes
-    setRfEdges((eds) =>
-      eds.map((edge) => {
-        if (descendantIds.includes(edge.target) || descendantIds.includes(edge.source)) {
-          return { ...edge, hidden: newCollapsedNodes.has(nodeId) };
-        }
-        return edge;
-      })
-    );
+  const handleLayoutChange = (direction: 'LR' | 'TB') => {
+    setLayoutDirection(direction);
+    const { nodes: newLayoutedNodes, edges: newLayoutedEdges } = getLayoutedElements(rfNodes, rfEdges, direction);
+    setRfNodes(newLayoutedNodes);
+    setRfEdges(newLayoutedEdges);
   };
 
   const handleConnect = (params: Connection) => {
@@ -151,40 +109,22 @@ const ReactFlowComponent: React.FC<ReactFlowComponentProps> = ({
     }
   };
 
-  const handleNodesChange = (changes: NodeChange[]) => {
-    onNodesChangeInternal(changes);
-    if (onNodesChange) {
-      onNodesChange(changes);
-    }
-  };
-
-  const handleEdgesChange = (changes: EdgeChange[]) => {
-    onEdgesChangeInternal(changes);
-    if (onEdgesChange) {
-      onEdgesChange(changes);
-    }
-  };
-
-  const handleNodeClick = (event: React.MouseEvent, node: any) => {
-    if (onNodeClick) {
-      onNodeClick(event, node);
-    }
-    if (nodeTypes['collapsible'] && node.type === 'collapsible') {
-      toggleCollapse(node.id);
-    }
-  };
-
   return (
     <ReactFlowProvider>
       <div style={{ height: 700 }}>
+        <div style={{ marginBottom: '10px' }}>
+          <button onClick={() => handleLayoutChange('TB')}>Vertical Layout</button>
+          <button onClick={() => handleLayoutChange('LR')}>Horizontal Layout</button>
+        </div>
         <ReactFlow
           nodes={rfNodes}
           edges={rfEdges}
-          onNodesChange={handleNodesChange}
-          onEdgesChange={handleEdgesChange}
+          onNodesChange={onNodesChangeInternal}
+          onEdgesChange={onEdgesChangeInternal}
           onConnect={handleConnect}
-          onNodeClick={handleNodeClick}
-          nodeTypes={nodeTypes}
+          nodeTypes={{
+            collapsible: (nodeProps) => <CollapsibleNode {...nodeProps} layoutDirection={layoutDirection} />,
+          }}
           snapToGrid={snapToGrid}
           snapGrid={snapGrid}
           fitView
