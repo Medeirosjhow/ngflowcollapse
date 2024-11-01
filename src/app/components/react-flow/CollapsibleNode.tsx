@@ -1,36 +1,49 @@
-import React, { useState, useEffect } from 'react';
+// src/app/components/react-flow/CollapsibleNode.tsx
+
+import React, { useContext } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
+import { ToggleCollapseContext, LayoutDirectionContext } from './contexts';
 
-interface CollapsibleNodeProps extends NodeProps {
-  layoutDirection: 'LR' | 'TB'; // Adiciona uma nova prop para direção do layout
-}
+interface CollapsibleNodeProps extends NodeProps {}
 
-const CollapsibleNode: React.FC<CollapsibleNodeProps> = ({ id, data, layoutDirection }) => {
-  const [collapsed, setCollapsed] = useState(data.collapsed ?? false);
+const CollapsibleNode: React.FC<CollapsibleNodeProps> = ({ id, data }) => {
+  const toggleCollapse = useContext(ToggleCollapseContext);
+  const layoutDirection = useContext(LayoutDirectionContext);
 
-  useEffect(() => {
-    if (data.collapsed !== undefined) {
-      setCollapsed(data.collapsed);
-    }
-  }, [data.collapsed]);
+  const collapsed = data.collapsed ?? false;
 
-  const toggleCollapse = () => setCollapsed(!collapsed);
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Evita que o clique propague para o nó pai
+    toggleCollapse(id);
+  };
 
   // Define a posição dos handles com base na direção do layout
   const sourceHandlePosition = layoutDirection === 'LR' ? Position.Right : Position.Bottom;
   const targetHandlePosition = layoutDirection === 'LR' ? Position.Left : Position.Top;
 
   return (
-    <div className="collapsible-node react-flow">
+    <div className="collapsible-node">
       <div
         className="header"
-        onClick={toggleCollapse}
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '5px',
+          background: '#ddd',
+          borderRadius: '5px',
+        }}
       >
         <span>{data.label}</span>
-        <button>{collapsed ? 'Expandir' : 'Colapsar'}</button>
+        <button onClick={handleToggle} style={{ cursor: 'pointer' }}>
+          {collapsed ? 'Expandir' : 'Colapsar'}
+        </button>
       </div>
-      {!collapsed && <div className="details">{data.details}</div>}
+      {!collapsed && (
+        <div className="details" style={{ padding: '5px' }}>
+          {data.details}
+        </div>
+      )}
       <Handle type="target" position={targetHandlePosition} id="a" />
       <Handle type="source" position={sourceHandlePosition} id="b" />
     </div>
