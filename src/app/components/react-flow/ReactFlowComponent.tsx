@@ -210,8 +210,8 @@ const ReactFlowComponent: React.FC<ReactFlowComponentProps> = ({
         <LayoutDirectionContext.Provider value={layoutDirection}>
           <div style={{ height: '700px', width: '100%' }}>
             <div style={{ marginBottom: '10px' }}>
-              <button onClick={() => handleLayoutChange('TB')}>Vertical Layout</button>
-              <button onClick={() => handleLayoutChange('LR')}>Horizontal Layout</button>
+              <button className='btn btn-primary mr' onClick={() => handleLayoutChange('TB')}>Vertical Layout</button>
+              <button className='btn btn-primary' onClick={() => handleLayoutChange('LR')}>Horizontal Layout</button>
             </div>
             <ReactFlow
               nodes={rfNodes}
