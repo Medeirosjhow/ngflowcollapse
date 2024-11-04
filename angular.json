@@ -31,17 +31,21 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/reactflow/dist/style.css"
+              "./node_modules/reactflow/dist/style.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "dagre",
+              "react-dom/client"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "700kb",
+                  "maximumError": "1.5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -50,7 +54,26 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/ngflowcollapse/"
+              "baseHref": "/ngflowcollapse/",
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "local": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "namedChunks": true,
+              "aot": false,
+              "baseHref": "/",
+              "extractLicenses": false,
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "fileReplacements": []
             },
             "development": {
               "buildOptimizer": false,
@@ -68,6 +91,9 @@
           "configurations": {
             "production": {
               "browserTarget": "ngflowcollapse:build:production"
+            },
+            "local": {
+              "browserTarget": "ngflowcollapse:build:local"
             },
             "development": {
               "browserTarget": "ngflowcollapse:build:development"

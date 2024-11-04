@@ -1,0 +1,36 @@
+name: Build and Deploy Angular to Github Pages
+
+on:
+  push:
+    branches:
+      - main # Branch principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo 1: Checout do código
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Passo 2: Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Passo 3: Instalar dependências
+      - name: Istall Dependencies
+        run: npm install
+
+      # Passo 4: Construir o projeto Angular
+      - name: Build Angular Project
+        run: ng build -- configuration=production
+
+      # Passo 5: Deploy para GitHub Pages
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOLEN }}
+          publish_dir: ./dist/ngflowcollapse
